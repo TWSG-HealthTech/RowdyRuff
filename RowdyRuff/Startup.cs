@@ -9,6 +9,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using RowdyRuff.Core.Common;
 using RowdyRuff.Repository;
 using RowdyRuff.Repository.Common;
+using Swashbuckle.SwaggerGen.Generator;
 
 namespace RowdyRuff
 {
@@ -40,6 +41,10 @@ namespace RowdyRuff
             services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
 
             services.AddSwaggerGen();
+            services.ConfigureSwaggerGen(options =>
+            {
+                options.GroupActionsBy(d => $"Module: {d.ActionDescriptor.RouteValues["area"]}");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

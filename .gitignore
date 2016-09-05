@@ -250,3 +250,7 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# CAKE
+tools/*
+!tools/NuGet.exe

@@ -1,0 +1,12 @@
+environment:
+  encryption_secret:
+    secure: Wg5N4thXnCjhD5lYFTm4mj054sRdRFt0A5XMONBbqM5aS4iygHEgPyJcjXomXG3BrTP3mqyTpR9VBDI1B7gFhw==
+
+build_script:
+  - ps: ./build.ps1 -Target Decrypt "-secret=$Env:encryption_secret"
+  - ps: ./build.ps1 -Target Build
+
+test_script:
+  - ps: ./build.ps1 -Target Test
+  - ps: $wc = New-Object 'System.Net.WebClient'
+  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/nunit3/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\TestResult.xml))

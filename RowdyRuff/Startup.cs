@@ -60,8 +60,7 @@ namespace RowdyRuff
             {
                 routes.MapRoute(
                     name: "profile",
-                    template: "{area:exists}/Api/Profile/{profileId}/{action=Index}",
-                    defaults: new { controller = "Profile" });
+                    template: "{area:exists}/Api/{controller=Profile}/{profileId}/{action=Index}");
 
                 routes.MapRoute(
                     name: "areaRoute",

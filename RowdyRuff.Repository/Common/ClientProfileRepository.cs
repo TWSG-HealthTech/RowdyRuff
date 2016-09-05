@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RowdyRuff.Core.Common;
 
@@ -20,6 +21,13 @@ namespace RowdyRuff.Repository.Common
             return _set
                 .Include(p => p.Connections)
                 .FirstOrDefault(s => s.Id == profileId);
+        }
+
+        public List<SocialConnection> FindSocialConnectionsFor(string profileId)
+        {
+            return _context.Set<SocialConnection>()
+                .Where(s => s.ClientProfileId == profileId)
+                .ToList();
         }
     }
 }

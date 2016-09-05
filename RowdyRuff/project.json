@@ -23,7 +23,8 @@
     "RowdyRuff.Core": "1.0.0-*",
     "RowdyRuff.Repository": "1.0.0-*",
     "RowdyRuff.Common": "1.0.0-*",
-    "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0"
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
+    "Swashbuckle": "6.0.0-beta902"
   },
 
   "tools": {
@@ -43,7 +44,8 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "xmlDoc": true
   },
 
   "runtimeOptions": {

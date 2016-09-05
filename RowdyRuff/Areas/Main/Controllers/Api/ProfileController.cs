@@ -6,6 +6,8 @@ using RowdyRuff.Core.Common;
 namespace RowdyRuff.Areas.Main.Controllers.Api
 {
     [Area("Main")]
+    [Route("/main/api/[controller]/{profileId}")]
+    [Produces("application/json")]
     public class ProfileController : Controller
     {
         private readonly IClientProfileRepository _clientProfileRepository;
@@ -15,6 +17,8 @@ namespace RowdyRuff.Areas.Main.Controllers.Api
             _clientProfileRepository = clientProfileRepository;
         }
 
+        [HttpGet]
+        [Produces(typeof(GetProfileByIdDTO))]
         public IActionResult Index(string profileId)
         {
             var profile = _clientProfileRepository.FindProfileBy(profileId);

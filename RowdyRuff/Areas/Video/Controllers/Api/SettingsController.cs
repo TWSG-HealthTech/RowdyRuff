@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RowdyRuff.Areas.Video.DTO;
 using RowdyRuff.Core.Common;
@@ -6,6 +7,8 @@ using RowdyRuff.Core.Common;
 namespace RowdyRuff.Areas.Video.Controllers.Api
 {
     [Area("Video")]
+    [Route("/video/api/{profileId}/[controller]")]
+    [Produces("application/json")]
     public class SettingsController : Controller
     {
         private readonly IClientProfileRepository _clientProfileRepository;
@@ -15,6 +18,8 @@ namespace RowdyRuff.Areas.Video.Controllers.Api
             _clientProfileRepository = clientProfileRepository;
         }
 
+        [HttpGet]
+        [Produces(typeof(IEnumerable<GetSocialConnectionsDTO>))]
         public IActionResult Index(string profileId)
         {
             var connections = _clientProfileRepository.FindSocialConnectionsFor(profileId);

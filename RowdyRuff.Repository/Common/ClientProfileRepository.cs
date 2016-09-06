@@ -29,5 +29,14 @@ namespace RowdyRuff.Repository.Common
                 .Where(s => s.ClientProfileId == profileId)
                 .ToList();
         }
+
+        public void UpdateConnectionVideoSetting(int connectionId, string skype)
+        {
+            var connection = _context.Set<SocialConnection>().FirstOrDefault(s => s.Id == connectionId);
+
+            connection.UpdateSkype(skype);
+
+            _context.SaveChanges();
+        }
     }
 }

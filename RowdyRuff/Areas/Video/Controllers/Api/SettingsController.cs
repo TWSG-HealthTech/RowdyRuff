@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RowdyRuff.Areas.Video.DTO;
@@ -29,6 +30,14 @@ namespace RowdyRuff.Areas.Video.Controllers.Api
                 Name = c.Name,
                 Skype = c.Skype
             }));
+        }
+
+        [HttpPut("{connectionId:int}")]
+        public IActionResult Update(int connectionId, [FromBody] UpdateSocialConnectionInput input)
+        {
+            _clientProfileRepository.UpdateConnectionVideoSetting(connectionId, input.Skype);
+
+            return Ok();
         }
     }
 }

@@ -33,6 +33,11 @@ namespace RowdyRuff.Core.Common
             Aliases = aliases;
         }
 
+        public void UpdateSkype(string skype)
+        {
+            Skype = skype;
+        }
+
         // For EF
         private SocialConnection() { }
 

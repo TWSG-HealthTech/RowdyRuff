@@ -28,7 +28,8 @@ namespace RowdyRuff.Areas.Video.Controllers.Api
             {
                 Id = c.Id,
                 Name = c.Name,
-                Skype = c.Skype
+                Skype = c.Skype,
+                AvatarUrl = c.AvatarUrl
             }));
         }
 

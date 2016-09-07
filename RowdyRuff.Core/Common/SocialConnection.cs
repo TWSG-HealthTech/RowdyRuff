@@ -12,6 +12,7 @@ namespace RowdyRuff.Core.Common
         public string ClientProfileId { get; private set; }
         public string Name { get; private set; }
         public string Skype { get; private set; }
+        public string AvatarUrl { get; private set; }
         public List<string> Aliases { get; private set; }
         public string CalendarEmail { get; private set; }
         public string CalendarNames { get; private set; }
@@ -29,13 +30,14 @@ namespace RowdyRuff.Core.Common
         public SocialConnection(string name, string skype, List<string> aliases)
         {
             Name = name;
-            Skype = skype;
             Aliases = aliases;
+            UpdateSkype(skype);
         }
 
         public void UpdateSkype(string skype)
         {
             Skype = skype;
+            AvatarUrl = $"https://api.skype.com/users/{Skype}/profile/avatar";
         }
 
         // For EF

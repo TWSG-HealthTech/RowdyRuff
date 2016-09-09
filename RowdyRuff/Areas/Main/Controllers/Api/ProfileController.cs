@@ -34,5 +34,17 @@ namespace RowdyRuff.Areas.Main.Controllers.Api
                 })
             });
         }
+
+        [HttpPut("connection/{connectionId:int}")]
+        public IActionResult Update(int connectionId, [FromBody] UpdateProfileConnectionInput input)
+        {
+            var connection = _clientProfileRepository.FindConnectionById(connectionId);
+
+            connection.UpdateProfile(input.Name, input.Aliases);
+
+            _clientProfileRepository.UpdateConnection(connection);
+
+            return Ok();
+        }
     }
 }

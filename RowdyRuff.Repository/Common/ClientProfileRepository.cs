@@ -30,11 +30,15 @@ namespace RowdyRuff.Repository.Common
                 .ToList();
         }
 
-        public void UpdateConnectionVideoSetting(int connectionId, string skype)
+        public SocialConnection FindConnectionById(int id)
         {
-            var connection = _context.Set<SocialConnection>().FirstOrDefault(s => s.Id == connectionId);
+            return _context.Set<SocialConnection>()
+                .FirstOrDefault(s => s.Id == id);
+        }
 
-            connection.UpdateSkype(skype);
+        public void UpdateConnection(SocialConnection connection)
+        {
+            _context.Entry(connection).State = EntityState.Modified;
 
             _context.SaveChanges();
         }

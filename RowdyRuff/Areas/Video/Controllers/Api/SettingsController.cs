@@ -36,7 +36,11 @@ namespace RowdyRuff.Areas.Video.Controllers.Api
         [HttpPut("{connectionId:int}")]
         public IActionResult Update(int connectionId, [FromBody] UpdateSocialConnectionInput input)
         {
-            _clientProfileRepository.UpdateConnectionVideoSetting(connectionId, input.Skype);
+            var connection = _clientProfileRepository.FindConnectionById(connectionId);
+
+            connection.UpdateSkype(input.Skype);
+
+            _clientProfileRepository.UpdateConnection(connection);
 
             return Ok();
         }

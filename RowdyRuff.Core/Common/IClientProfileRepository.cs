@@ -6,6 +6,7 @@ namespace RowdyRuff.Core.Common
     {
         ClientProfile FindProfileBy(string profileId);
         List<SocialConnection> FindSocialConnectionsFor(string profileId);
-        void UpdateConnectionVideoSetting(int connectionId, string skype);
+        SocialConnection FindConnectionById(int id);
+        void UpdateConnection(SocialConnection connection);
     }
 }

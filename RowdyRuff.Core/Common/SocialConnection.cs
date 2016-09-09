@@ -40,6 +40,12 @@ namespace RowdyRuff.Core.Common
             AvatarUrl = $"https://api.skype.com/users/{Skype}/profile/avatar";
         }
 
+        public void UpdateProfile(string name, List<string> aliases)
+        {
+            Name = name;
+            Aliases = aliases;
+        }
+
         // For EF
         private SocialConnection() { }
 

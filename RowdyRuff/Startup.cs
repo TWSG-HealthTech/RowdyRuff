@@ -1,20 +1,17 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
-using RowdyRuff.Core.Common;
-using RowdyRuff.Repository;
-using RowdyRuff.Repository.Common;
-using Swashbuckle.SwaggerGen.Generator;
 
 namespace RowdyRuff
 {
     public class Startup
     {
+        private readonly BootstrapperLoader _bootstrapLoader;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -23,6 +20,9 @@ namespace RowdyRuff
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            
+            _bootstrapLoader = new BootstrapperLoader(PlatformServices.Default.Application.ApplicationBasePath);
+            _bootstrapLoader.Initialize("RowdyRuff*.dll", Configuration);
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -33,18 +33,13 @@ namespace RowdyRuff
             // Add framework services.
             services.AddMvc();
 
-            services.AddEntityFrameworkSqlServer()
-                    .AddDbContext<RowdyRuffContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-            );
-
-            services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
-
             services.AddSwaggerGen();
             services.ConfigureSwaggerGen(options =>
             {
                 options.GroupActionsBy(d => $"Module: {d.ActionDescriptor.RouteValues["area"]}");
             });
+
+            _bootstrapLoader.ConfigureServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +57,7 @@ namespace RowdyRuff
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
@@ -78,6 +73,8 @@ namespace RowdyRuff
 
             app.UseSwagger();
             app.UseSwaggerUi();
-        }
+            
+            _bootstrapLoader.Configure(app);
+        }        
     }
 }

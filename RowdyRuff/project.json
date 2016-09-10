@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "Microsoft.NETCore.App": {
-      "version": "1.0.0",
-      "type": "platform"
-    },
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Razor.Tools": {
@@ -21,9 +17,7 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "RowdyRuff.Core": "1.0.0-*",
-    "RowdyRuff.Repository": "1.0.0-*",
-    "RowdyRuff.Common": "1.0.0-*",
-    "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
+    "RowdyRuff.Common": "1.0.0-*",    
     "Swashbuckle": "6.0.0-beta902"
   },
 
@@ -34,12 +28,7 @@
   },
 
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "dotnet5.6",
-        "portable-net45+win8"
-      ]
-    }
+    "net461": {}
   },
 
   "buildOptions": {
@@ -66,6 +55,9 @@
 
   "scripts": {
     "prepublish": [ "bower install", "dotnet bundle" ],
-    "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
+    "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ],
+    "postcompile": [
+      "xcopy /y /d .\\..\\RowdyRuff.Repository\\bin\\%compile:Configuration%\\%compile:TargetFramework%\\*.dll .\\bin\\%compile:Configuration%\\%compile:TargetFramework%\\%compile:RuntimeIdentifier%\\"
+    ]
   }
 }

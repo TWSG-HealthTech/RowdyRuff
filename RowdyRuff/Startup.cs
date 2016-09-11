@@ -21,7 +21,7 @@ namespace RowdyRuff
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
             
-            _bootstrapLoader = new BootstrapperLoader(PlatformServices.Default.Application.ApplicationBasePath);
+            _bootstrapLoader = new BootstrapperLoader(PlatformServices.Default.Application.ApplicationBasePath, env);
             _bootstrapLoader.Initialize("RowdyRuff*.dll", Configuration);
         }
 

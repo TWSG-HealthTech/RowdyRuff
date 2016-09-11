@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,11 +18,12 @@ namespace RowdyRuff
         private const string BootstrapperClassName = "Bootstrapper";
         private IEnumerable<object> _bootstrappers;
         private readonly string _dllPath;
-        private static readonly List<string> _configureMethodNames = new List<string> { "Configure", "ConfigureDevelopment" };
+        private readonly IHostingEnvironment _env;
 
-        public BootstrapperLoader(string dllPath)
+        public BootstrapperLoader(string dllPath, IHostingEnvironment env)
         {
             _dllPath = dllPath;
+            _env = env;
         }
 
         public void Initialize(string dllSearchPattern, IConfigurationRoot configurationRoot)
@@ -51,14 +53,12 @@ namespace RowdyRuff
         {
             foreach (var bootstrapper in _bootstrappers)
             {
-                _configureMethodNames.ForEach(m =>
+                InvokeMethodIfAvailable(bootstrapper, "Configure", app);
+
+                if (_env.IsDevelopment())
                 {
-                    var configureMethod = bootstrapper.GetType().GetMethod(m);
-                    if (configureMethod != null)
-                    {
-                        InvokeMethodWithDynamicallyResolvedParameters(bootstrapper, configureMethod, app);
-                    }
-                });
+                    InvokeMethodIfAvailable(bootstrapper, "ConfigureDevelopment", app);
+                }
             }
         }
 
@@ -74,6 +74,15 @@ namespace RowdyRuff
             { } // If a BadImageFormatException exception is thrown, the file is not an assembly.
 
             return null;
+        }
+
+        private static void InvokeMethodIfAvailable(object bootstrapper, string methodName, IApplicationBuilder app)
+        {
+            var configureMethod = bootstrapper.GetType().GetMethod(methodName);
+            if (configureMethod != null)
+            {
+                InvokeMethodWithDynamicallyResolvedParameters(bootstrapper, configureMethod, app);
+            }
         }
 
         private static void InvokeMethodWithDynamicallyResolvedParameters(object bootstrapper, MethodInfo configureMethod, IApplicationBuilder builder)

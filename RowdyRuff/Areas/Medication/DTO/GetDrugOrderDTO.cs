@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RowdyRuff.Areas.Medication.DTO
 {
-    public class GetPrescriptionDTO
+    public class GetDrugOrderDTO
     {
         public string DrugName { get; set; }
         public string Dose { get; set; }

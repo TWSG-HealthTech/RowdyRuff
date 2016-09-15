@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RowdyRuff.Core.Common
 {
-    public class Prescription
+    public class DrugOrder
     {
         public string PatientUuid { get; private set; }
         public string DrugName { get; private set; }
@@ -15,7 +15,7 @@ namespace RowdyRuff.Core.Common
         public DateTime EndDate { get; private set; }
         public string Frequency { get; private set; }
 
-        public Prescription(string patientUuid, string drugName, string dose, string doseUnit, DateTime startDate, DateTime endDate, string frequency)
+        public DrugOrder(string patientUuid, string drugName, string dose, string doseUnit, DateTime startDate, DateTime endDate, string frequency)
         {
             PatientUuid = patientUuid;
             DrugName = drugName;
@@ -26,6 +26,6 @@ namespace RowdyRuff.Core.Common
             Frequency = frequency;
         }
 
-        private Prescription() { }
+        private DrugOrder() { }
     }
 }

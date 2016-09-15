@@ -9,6 +9,11 @@ namespace RowdyRuff.Areas.Medication.DTO
 {
     public class GetPrescriptionDTO
     {
-        public List<String> DrugOrders { get; set; }
+        public string DrugName { get; set; }
+        public string Dose { get; set; }
+        public string DoseUnit { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Frequency { get; set; }
     }
 }

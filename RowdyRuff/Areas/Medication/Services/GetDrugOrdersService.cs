@@ -10,12 +10,12 @@ namespace RowdyRuff.Areas.Medication.Services
 {
     public class GetDrugOrdersService
     {
-        public static async Task<List<DrugOrder>> GetDrugOrdersForPatient(string patientUuid)
+        public static async Task<List<DrugOrder>> GetDrugOrdersForPatient(string patientUuid, BahmniConnection bahmniSettings)
         {
             string path =
                 "https://bahmni-sg-dev.click/openmrs/ws/rest/v1/bahmnicore/drugOrders/prescribedAndActive?getEffectiveOrdersOnly=false&getOtherActive=true&numberOfVisits=10&patientUuid=" + patientUuid;
             var gateway = new ServerGatewayBase();
-            JObject drugOrders = await gateway.GetAsyncWithBasicAuth<JObject>(path, "username", "password");
+            JObject drugOrders = await gateway.GetAsyncWithBasicAuth<JObject>(path, bahmniSettings.Username, bahmniSettings.Password);
             return ParseDrugOrderResultsData(drugOrders, patientUuid);
         }
 
@@ -41,5 +41,11 @@ namespace RowdyRuff.Areas.Medication.Services
         {
             return new DateTime(1970, 1, 1).AddMilliseconds(timeInMillionseconds);
         }
+    }
+
+    public class BahmniConnection
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

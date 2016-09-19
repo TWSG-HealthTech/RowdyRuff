@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
+using RowdyRuff.Areas.Medication.Services;
 
 namespace RowdyRuff
 {
@@ -38,6 +39,7 @@ namespace RowdyRuff
             {
                 options.GroupActionsBy(d => $"Module: {d.ActionDescriptor.RouteValues["area"]}");
             });
+            services.Configure<BahmniConnection>(Configuration.GetSection("BahmniConnection"));
 
             _bootstrapLoader.ConfigureServices(services);
         }

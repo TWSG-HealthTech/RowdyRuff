@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Options;
 using RowdyRuff.Areas.Medication.DTO;
 using RowdyRuff.Areas.Medication.Services;
-using RowdyRuff.Core.Common;
 
 namespace RowdyRuff.Areas.Medication.Controllers.API
 {
@@ -19,13 +13,19 @@ namespace RowdyRuff.Areas.Medication.Controllers.API
     [Produces("application/json")]
     public class MedicationController : Controller
     {
+        private readonly BahmniConnection _bahmniSettings;
+
+        public MedicationController(IOptions<BahmniConnection> settings)
+        {
+            _bahmniSettings = settings.Value;
+        }
 
         [HttpGet]
         [Produces(typeof(IEnumerable<GetDrugOrderDTO>))]
         public async Task<IActionResult> Index(string patientUuid)
         {
             patientUuid = "31e164fa-dd5b-4a10-a487-33e3a97e6198";
-            var drugOrders = await GetDrugOrdersService.GetDrugOrdersForPatient(patientUuid);
+            var drugOrders = await GetDrugOrdersService.GetDrugOrdersForPatient(patientUuid, _bahmniSettings);
             return Json(drugOrders.Select(c => new GetDrugOrderDTO()
             {
                 DrugName = c.DrugName,

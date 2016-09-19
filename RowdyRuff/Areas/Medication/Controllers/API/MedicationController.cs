@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using RowdyRuff.Areas.Medication.DTO;
 using RowdyRuff.Areas.Medication.Services;
+using RowdyRuff.Settings;
 
 namespace RowdyRuff.Areas.Medication.Controllers.API
 {

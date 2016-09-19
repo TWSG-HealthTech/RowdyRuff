@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using NuGet.ProjectModel;
 using RowdyRuff.Common.Gateway;
 using RowdyRuff.Core.Common;
+using RowdyRuff.Settings;
 
 namespace RowdyRuff.Areas.Medication.Services
 {
@@ -41,11 +42,5 @@ namespace RowdyRuff.Areas.Medication.Services
         {
             return new DateTime(1970, 1, 1).AddMilliseconds(timeInMillionseconds);
         }
-    }
-
-    public class BahmniConnection
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
     }
 }

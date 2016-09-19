@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using RowdyRuff.Areas.Medication.Services;
+using RowdyRuff.Settings;
 
 namespace RowdyRuff
 {

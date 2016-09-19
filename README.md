@@ -10,6 +10,36 @@
 - Download and install SQL Server Express and Tools (ExpressAndTools 64BIT\SQLEXPRWT_x64_ENU.exe) from https://www.microsoft.com/en-sg/download/details.aspx?id=42299
     - When installing, choose Mixed Mode authentication. The project by default uses Windows Authentication for SQL Server
 
+### Secrets file
+The project contains a secrets file that is encrypted.  In order to run the project you will need to decrypt this file.
+Run this command:
+```
+./build.ps1 -target Decrypt -secret=<<the secret>>
+```
+Ask the CATE/RowdyRuff team lead for the secret.
+
+Alternatively, if you are not in the CATE/RowdyRuff team (and hence the team lead won't tell you the secret) you can create your own `appsettings.json` file with the following template:
+```
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.\\SQLExpress;Database=RowdyRuff;Integrated Security=True;MultipleActiveResultSets=true"
+  },
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "BahmniConnection": {
+    "Username": <<Bahmni API username>>,
+    "Password": <<Bahmni API password>>  
+  } 
+}
+
+```
+
 ## Solution Structure
 
 This is ASP.NET Core application (target .NET framework 4.6.1)

@@ -254,3 +254,4 @@ paket-files/
 # CAKE
 tools/*
 !tools/NuGet.exe
+RowdyRuff/appsettings.json

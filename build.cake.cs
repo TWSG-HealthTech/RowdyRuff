@@ -1,5 +1,6 @@
 #tool "nuget:?package=NUnit.ConsoleRunner"
 #tool "nuget:?package=Machine.Specifications.Runner.Console"
+#tool "nuget:?package=secure-file"
 
 using System.Diagnostics;
 using IO = System.IO;
@@ -42,6 +43,49 @@ Task("Test")
   {
     throw new CakeException(string.Format("mSpec test failure... exit code: {0}", mspecProcess.ExitCode));
 }
+    });
+
+
+    Task("Encrypt")
+    .Does(() => {
+        var startInfo = new ProcessStartInfo(IO.Path.Combine(IO.Directory.GetCurrentDirectory(), "tools/secure-file/tools/secure-file"))
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            CreateNoWindow = true,
+            Arguments = "-encrypt ./RowdyRuff/appsettings.json -secret " + Argument<string>("secret", null)
+        };
+
+var proc = Process.Start(startInfo);
+        while (!proc.StandardOutput.EndOfStream) {
+            string line = proc.StandardOutput.ReadLine();
+Console.WriteLine(line);
+        }
+        if (proc.ExitCode != 0)
+        {
+            throw new CakeException(string.Format("secure-file encryption failed... exit code: {0}", proc.ExitCode));
+        }
+    });
+
+    Task("Decrypt")
+    .Does(() => {
+        var startInfo = new ProcessStartInfo(IO.Path.Combine(IO.Directory.GetCurrentDirectory(), "tools/secure-file/tools/secure-file"))
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            CreateNoWindow = true,
+            Arguments = "-decrypt ./RowdyRuff/appsettings.json.enc -secret " + Argument<string>("secret", null)
+        };
+
+var proc = Process.Start(startInfo);
+        while (!proc.StandardOutput.EndOfStream) {
+            string line = proc.StandardOutput.ReadLine();
+Console.WriteLine(line);
+        }
+        if (proc.ExitCode != 0)
+        {
+            throw new CakeException(string.Format("secure-file decryption failed... exit code: {0}", proc.ExitCode));
+        }
     });
 
     Task("Default")

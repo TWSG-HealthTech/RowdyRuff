@@ -25,6 +25,9 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RowdyRuff.Repository.Tests", "RowdyRuff.Repository.Tests\RowdyRuff.Repository.Tests.xproj", "{D2A3C0D9-CC36-410B-A856-4DDCF608F3DF}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RowdyRuff.Tests", "RowdyRuff.Tests\RowdyRuff.Tests.xproj", "{F837D05D-E6C6-4A0C-B281-36B079BA6B98}"
+	ProjectSection(ProjectDependencies) = postProject
+		{26C65BD9-613D-4A5A-995F-31D765ECEC55} = {26C65BD9-613D-4A5A-995F-31D765ECEC55}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5E56453B-FEEB-4E8D-BFCA-D2D7D6EE2380}"
 	ProjectSection(SolutionItems) = preProject

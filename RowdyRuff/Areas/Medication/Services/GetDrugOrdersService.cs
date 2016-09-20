@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NuGet.ProjectModel;
@@ -9,18 +10,19 @@ using RowdyRuff.Settings;
 
 namespace RowdyRuff.Areas.Medication.Services
 {
-    public class GetDrugOrdersService
+    public class GetDrugOrdersService : IGetDrugOrdersService
     {
-        public static async Task<List<DrugOrder>> GetDrugOrdersForPatient(string patientUuid, BahmniConnection bahmniSettings)
+        async Task<List<DrugOrder>> IGetDrugOrdersService.GetDrugOrdersForPatient(string patientUuid, BahmniConnection bahmniSettings)
         {
             string path =
-                "https://bahmni-sg-dev.click/openmrs/ws/rest/v1/bahmnicore/drugOrders/prescribedAndActive?getEffectiveOrdersOnly=false&getOtherActive=true&numberOfVisits=10&patientUuid=" + patientUuid;
-            var gateway = new ServerGatewayBase();
+              "https://bahmni-sg-dev.click/openmrs/ws/rest/v1/bahmnicore/drugOrders/prescribedAndActive?getEffectiveOrdersOnly=false&getOtherActive=true&numberOfVisits=10&patientUuid=" + patientUuid;
+            IServerGateway gateway = new ServerGatewayBase();
+            Debug.WriteLine(path);
             JObject drugOrders = await gateway.GetAsyncWithBasicAuth<JObject>(path, bahmniSettings.Username, bahmniSettings.Password);
             return ParseDrugOrderResultsData(drugOrders, patientUuid);
         }
 
-        private static List<DrugOrder> ParseDrugOrderResultsData(JObject input, string patientUuid)
+        private List<DrugOrder> ParseDrugOrderResultsData(JObject input, string patientUuid)
         {
             List<DrugOrder> drugOrders = new List<DrugOrder>();
             foreach (var drugOrderInput in input.GetValue("visitDrugOrders"))
@@ -38,7 +40,7 @@ namespace RowdyRuff.Areas.Medication.Services
             return drugOrders;
         }
 
-        private static DateTime convertTime(long timeInMillionseconds)
+        private DateTime convertTime(long timeInMillionseconds)
         {
             return new DateTime(1970, 1, 1).AddMilliseconds(timeInMillionseconds);
         }

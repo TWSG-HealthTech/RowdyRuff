@@ -41,6 +41,7 @@ namespace RowdyRuff
                 options.GroupActionsBy(d => $"Module: {d.ActionDescriptor.RouteValues["area"]}");
             });
             services.Configure<BahmniConnection>(Configuration.GetSection("BahmniConnection"));
+            services.AddScoped<IGetDrugOrdersService, GetDrugOrdersService>();
 
             _bootstrapLoader.ConfigureServices(services);
         }

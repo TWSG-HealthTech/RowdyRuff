@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace RowdyRuff.Common.Gateway
 {
-    public class ServerGatewayBase
+    public class ServerGatewayBase : IServerGateway
     {
         public Task<T> GetAsyncWithBasicAuth<T>(string path, string username, string password)
         {

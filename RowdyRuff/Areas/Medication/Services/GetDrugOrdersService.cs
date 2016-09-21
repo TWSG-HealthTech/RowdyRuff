@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using NuGet.ProjectModel;
 using RowdyRuff.Common.Gateway;
 using RowdyRuff.Core.Common;
 using RowdyRuff.Settings;
@@ -12,14 +11,19 @@ namespace RowdyRuff.Areas.Medication.Services
 {
     public class GetDrugOrdersService : IGetDrugOrdersService
     {
-        async Task<List<DrugOrder>> IGetDrugOrdersService.GetDrugOrdersForPatient(string patientUuid, BahmniConnection bahmniSettings)
+        private IServerGateway _gateway;
+        public GetDrugOrdersService(IServerGateway gateway)
+        {
+            _gateway = gateway;
+        }
+
+        public async Task<List<DrugOrder>> GetDrugOrdersForPatient(string patientUuid, BahmniConnection bahmniSettings)
         {
             string path =
               "https://bahmni-sg-dev.click/openmrs/ws/rest/v1/bahmnicore/drugOrders/prescribedAndActive?getEffectiveOrdersOnly=false&getOtherActive=true&numberOfVisits=10&patientUuid=" + patientUuid;
-            IServerGateway gateway = new ServerGatewayBase();
-            Debug.WriteLine(path);
-            JObject drugOrders = await gateway.GetAsyncWithBasicAuth<JObject>(path, bahmniSettings.Username, bahmniSettings.Password);
-            return ParseDrugOrderResultsData(drugOrders, patientUuid);
+            JObject drugOrders = await _gateway.GetAsyncWithBasicAuth<JObject>(path, bahmniSettings.Username, bahmniSettings.Password);
+            var dos = ParseDrugOrderResultsData(drugOrders, patientUuid);
+            return dos;
         }
 
         private List<DrugOrder> ParseDrugOrderResultsData(JObject input, string patientUuid)
@@ -28,12 +32,12 @@ namespace RowdyRuff.Areas.Medication.Services
             foreach (var drugOrderInput in input.GetValue("visitDrugOrders"))
             {
                 DrugOrder drugOrder = new DrugOrder(
-                    patientUuid, 
-                    drugOrderInput.GetValue<JObject>("concept").GetValue("name").ToString(),
-                    drugOrderInput.GetValue<JObject>("dosingInstructions").GetValue("dose").ToString(),
-                    drugOrderInput.GetValue<JObject>("dosingInstructions").GetValue("doseUnits").ToString(),
-                    convertTime(drugOrderInput.GetValue<long>("effectiveStartDate")),
-                    convertTime(drugOrderInput.GetValue<long>("effectiveStopDate")),
+                    patientUuid,
+                    drugOrderInput["concept"]["name"].ToString(),
+                    drugOrderInput["dosingInstructions"]["dose"].ToString(),
+                    drugOrderInput["dosingInstructions"]["doseUnits"].ToString(),
+                    convertTime(Convert.ToInt64(drugOrderInput["effectiveStartDate"].ToString())),
+                    convertTime(Convert.ToInt64(drugOrderInput["effectiveStopDate"].ToString())),
                     "3");
                 drugOrders.Add(drugOrder);
             }
@@ -42,7 +46,7 @@ namespace RowdyRuff.Areas.Medication.Services
 
         private DateTime convertTime(long timeInMillionseconds)
         {
-            return new DateTime(1970, 1, 1).AddMilliseconds(timeInMillionseconds);
+            return DateTimeOffset.FromUnixTimeMilliseconds(timeInMillionseconds).UtcDateTime;
         }
     }
 }

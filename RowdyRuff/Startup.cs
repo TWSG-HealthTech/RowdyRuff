@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using RowdyRuff.Areas.Medication.Services;
+using RowdyRuff.Common.Gateway;
 using RowdyRuff.Settings;
 
 namespace RowdyRuff
@@ -42,6 +43,7 @@ namespace RowdyRuff
             });
             services.Configure<BahmniConnection>(Configuration.GetSection("BahmniConnection"));
             services.AddScoped<IGetDrugOrdersService, GetDrugOrdersService>();
+            services.AddScoped<IServerGateway, ServerGatewayBase>();
 
             _bootstrapLoader.ConfigureServices(services);
         }

@@ -27,7 +27,6 @@ namespace RowdyRuff.Areas.Medication.Controllers.API
         [Produces(typeof(IEnumerable<GetDrugOrderDTO>))]
         public async Task<IActionResult> Index(string patientUuid)
         {
-            patientUuid = "31e164fa-dd5b-4a10-a487-33e3a97e6198";
             var drugOrders = await _getDrugOrdersService.GetDrugOrdersForPatient(patientUuid, _bahmniSettings);
             return Json(drugOrders.Select(c => new GetDrugOrderDTO()
             {
